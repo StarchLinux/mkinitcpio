@@ -43,8 +43,8 @@ install: all
 	install -m644 init_functions functions $(DESTDIR)/usr/lib/initcpio/
 	install -m644 01-memdisk.rules $(DESTDIR)/usr/lib/initcpio/udev/01-memdisk.rules
 
-	cp -at $(DESTDIR)/usr/lib/initcpio hooks install
-	cp -at $(DESTDIR)/etc mkinitcpio.d
+	cp -r hooks install $(DESTDIR)/usr/lib/initcpio
+	cp -r mkinitcpio.d $(DESTDIR)/etc
 
 	install -m644 man/mkinitcpio.8 $(DESTDIR)/usr/share/man/man8/mkinitcpio.8
 	install -m644 man/mkinitcpio.conf.5 $(DESTDIR)/usr/share/man/man5/mkinitcpio.conf.5
