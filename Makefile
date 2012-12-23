@@ -22,7 +22,7 @@ MANPAGES = \
 
 install: all
 	mkdir -p $(DESTDIR)
-	$(foreach dir,$(DIRS),install -dm755 $(DESTDIR)$(dir);)
+	for dir in $(DIRS); do install -dm755 $(DESTDIR)/$$dir; done
 
 	sed -e 's|^_f_config=.*|_f_config=/etc/mkinitcpio.conf|' \
 	    -e 's|^_f_functions=.*|_f_functions=/usr/lib/initcpio/functions|' \
