@@ -1,0 +1,98 @@
+'\" t
+.\"     Title: mkinitcpio.conf
+.\"    Author: [see the "Authors" section]
+.\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
+.\"      Date: 12/23/2012
+.\"    Manual: mkinitcpio manual
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "MKINITCPIO\&.CONF" "5" "12/23/2012" "\ \&" "mkinitcpio manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mkinitcpio.conf \- mkinitcpio configuration file
+.SH "SYNOPSIS"
+.sp
+/etc/mkinitcpio\&.conf
+.SH "DESCRIPTION"
+.sp
+mkinitcpio will attempt to read from a config file each time it is invoked, \(oq/etc/mkinitcpio\&.conf\(cq by default\&. This file defines several variables which describe the contents of the image to be generated\&.
+.SH "VARIABLES"
+.PP
+\fBMODULES\fR
+.RS 4
+Defines additional modules, space delimited, which should be added to the image\&. Dependencies (including other modules and necessary firmware), will also be added to the image\&. At runtime, the modules in this array which were successfully added to the image will be explicitly loaded\&.
+.RE
+.PP
+\fBFILES\fR
+.RS 4
+Defines additional files, space delimited, which should be added to the image\&. Files are added as is, and parent directories will be added if needed\&. Files specified in this variable will override previously added files of the same path\&.
+.RE
+.PP
+\fBBINARIES\fR
+.RS 4
+Defines additional binaries, space delimited, which should be added to the image\&. These are assumed to be dynamic ELF binaries, and necessary shared library dependencies will automatically be added\&. However, it is not considered an error to specify a non\-ELF binary in this variable\&. Parent directories will be added if needed\&. Files specified in this variable will override previously added files of the same path\&.
+.RE
+.PP
+\fBHOOKS\fR
+.RS 4
+This variable defines the hooks which will be run during the build process\&. Order is important, as it defines the order in which hooks will be run during bootup\&. Use mkinitcpio\(cqs
+\fI\-L\fR
+flag to list all available hooks, and the
+\fI\-H\fR
+flag to display the help text for a specific hook\&.
+.RE
+.PP
+\fBCOMPRESSION\fR
+.RS 4
+Defines a program to filter the generated image through\&. As of linux 2\&.6\&.38, the kernel understands the compression formats yielded by the
+\fBgzip\fR,
+\fBbzip2\fR,
+\fBlzop\fR,
+\fBlzma\fR, and
+\fBxz\fR
+compressors\&. If unspecified, this setting defaults to
+\fBgzip\fR
+compression\&. In order to create an uncompressed image, define this variable as
+\fBcat\fR\&.
+.sp
+It\(cqs not hard to realize that a filter such as a
+\fBtac\fR
+or
+\fBrev\fR
+will cause
+\fBmkinitcpio\fR
+to report success but generate a useless image\&. Similarly, using a compression program not listed above may generate an equally useless image, despite being "valid"\&.
+.RE
+.PP
+\fBCOMPRESSION_OPTIONS\fR
+.RS 4
+Defines additional options to be passed to the compression program\&. This option is generally not used\&. It can be potentially dangerous and may cause invalid images to be generated without any sign of an error\&.
+.RE
+.SH "SEE ALSO"
+.sp
+\fBmkinitcpio\fR(8)
+.SH "AUTHORS"
+.sp
+mkinitcpio is created and maintained by the Arch Linux Developer community\&.
+.SH "COPYRIGHT"
+.sp
+Copyright (c) Arch Linux 2006\-2012

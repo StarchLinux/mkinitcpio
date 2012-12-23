@@ -53,11 +53,6 @@ install: all
 	ln -s mkinitcpio $(DESTDIR)/usr/share/bash-completion/completions/lsinitcpio
 
 doc: $(MANPAGES)
-man/%: man/%.txt Makefile
-	a2x -d manpage \
-		-f manpage \
-		-a manversion=$(VERSION) \
-		-a manmanual="mkinitcpio manual" $<
 
 clean:
 	$(RM) mkinitcpio-${VERSION}.tar.gz $(MANPAGES)

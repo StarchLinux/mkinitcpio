@@ -1,0 +1,343 @@
+'\" t
+.\"     Title: mkinitcpio
+.\"    Author: [see the "Authors" section]
+.\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
+.\"      Date: 12/23/2012
+.\"    Manual: mkinitcpio manual
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "MKINITCPIO" "8" "12/23/2012" "\ \&" "mkinitcpio manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mkinitcpio \- Create an initial ramdisk environment
+.SH "SYNOPSIS"
+.sp
+\fImkinitcpio\fR [options]
+.SH "DESCRIPTION"
+.sp
+Creates an initial ramdisk environment for booting the linux kernel\&. The initial ramdisk is in essence a very small environment (early userspace) which loads various kernel modules and sets up necessary things before handing over control to init\&. This makes it possible to have, for example, encrypted root filesystems and root filesystems on a software RAID array\&. mkinitcpio allows for easy extension with custom hooks, has autodetection at runtime, and many other features\&.
+.SH "OPTIONS"
+.PP
+\fB\-A, \-\-addhooks\fR \fIhooks\fR
+.RS 4
+Add the additional
+\fIhooks\fR
+to the image\&. These will be processed in order after all other hooks from the config file\&. Multiple hooks should be comma\-separated\&. This option can be specified multiple times\&.
+.RE
+.PP
+\fB\-c, \-\-config\fR \fIconfig\fR
+.RS 4
+Use
+\fIconfig\fR
+file to generate the ramdisk\&. Default: /etc/mkinitcpio\&.conf
+.RE
+.PP
+\fB\-g, \-\-generate\fR \fIfilename\fR
+.RS 4
+Generate a CPIO image as
+\fIfilename\fR\&. Default: no; this means nothing will be written to the filesystem unless this option is specified\&.
+.RE
+.PP
+\fB\-H, \-\-hookhelp\fR \fIhookname\fR
+.RS 4
+Output help for hookname
+\fIhookname\fR\&.
+.RE
+.PP
+\fB\-h, \-\-help\fR
+.RS 4
+Output a short overview of available command\-line switches\&.
+.RE
+.PP
+\fB\-k, \-\-kernel\fR \fIkernelversion\fR
+.RS 4
+Use
+\fIkernelversion\fR, instead of the current running kernel\&. This may be a path to a kernel image or a specific kernel version\&.
+.RE
+.PP
+\fB\-L, \-\-listhooks\fR
+.RS 4
+List all available hooks\&.
+.RE
+.PP
+\fB\-M, \-\-automods\fR
+.RS 4
+Display modules found via autodetection\&. mkinitcpio will automatically try to determine which kernel modules are needed to start your computer\&. This option lists which modules were detected\&.
+.RE
+.PP
+\fB\-n, \-\-nocolor\fR
+.RS 4
+Disable color output\&.
+.RE
+.PP
+\fB\-p, \-\-preset\fR \fIpreset\fR
+.RS 4
+Build initramfs image(s) according to specified
+\fIpreset\fR\&. This may be a file in /etc/mkinitcpio\&.d (without the \&.preset extension) or a full, absolute path to a file\&.
+.RE
+.PP
+\fB\-r, \-\-moduleroot\fR \fIroot\fR
+.RS 4
+Specifies the root directory to find modules in, defaulting to
+\fI/\fR\&.
+.RE
+.PP
+\fB\-S, \-\-skiphooks\fR \fIhooks\fR
+.RS 4
+Skip
+\fIhooks\fR
+when generating the image\&. Multiple hooks should be comma\-separated\&. This option can be specified multiple times\&.
+.RE
+.PP
+\fB\-s, \-\-save\fR
+.RS 4
+Saves the build directory for the initial ramdisk\&. Default: no; This means the directory will not be retained if this option isn\(cqt specified\&. Useful for debugging purposes\&.
+.RE
+.PP
+\fB\-t, \-\-builddir\fR \fItmpdir\fR
+.RS 4
+Use
+\fItmpdir\fR
+as the temporary build directory instead of /tmp\&.
+\fItmpdir\fR
+must exist\&. The
+\fITMPDIR\fR
+environment variable is also honored to set this location, but the command line option will take precedence\&.
+.RE
+.PP
+\fB\-V, \-\-version\fR
+.RS 4
+Display version information\&.
+.RE
+.PP
+\fB\-v, \-\-verbose\fR
+.RS 4
+Verbose output\&. Outputs more information about what\(cqs happening during creation of the ramdisk\&.
+.RE
+.PP
+\fB\-z, \-\-compress\fR \fIcompress\fR
+.RS 4
+Override the compression method with the
+\fIcompress\fR
+program\&.
+.RE
+.SH "ABOUT PRESETS"
+.sp
+A preset is a pre\-defined definition on how to create an initial ramdisk\&. Instead of specifying the configuration file and which output file, every time you generate a new initial ramdisk, you define a preset and use the \-p switch to generate an initial ramdisk according to your preset\&. Presets are located in /etc/mkinitcpio\&.d
+.SH "ABOUT INSTALL HOOKS"
+.sp
+Install hooks are bash scripts which are sourced during mkinitcpio runtime in order to add modules, binaries, and other files to the image\&. A variety of functions exist to facilitate this\&.
+.PP
+\fBadd_module\fR \fImodname\fR
+.RS 4
+Adds the module specified by
+\fImodname\fR
+to the image\&. Dependencies are derived and added automatically\&.
+.RE
+.PP
+\fBadd_binary\fR \fIbinary\fR [ \fIdestination\fR ] [ \fImode\fR ]
+.RS 4
+Adds a binary to the image\&. The argument
+\fIbinary\fR
+need not be an absolute path and, if needed, a lookup will be performed\&. If the binary is a dynamically linked ELF binary, dependencies will be automatically added\&. Optionally, a destination within the initramfs image as well as a file mode can be specified\&. By default, the destintation and mode be taken from the source derived from
+\fIbinary\fR\&.
+.RE
+.PP
+\fBadd_file\fR \fIpath\fR [ \fIdestination\fR ] [ \fImode\fR ]
+.RS 4
+Adds a file and any needed parent directories to the image\&. Optionally, a destination within the initramfs image as well as a file mode can be specified\&. By default, the destination and mode will be taken from the source and mode of the file specified by the
+\fIpath\fR\&.
+.RE
+.PP
+\fBadd_dir\fR \fIpath\fR
+.RS 4
+Adds a directory and its parents to the image\&.
+.RE
+.PP
+\fBadd_full_dir\fR \fIdirectory\fR
+.RS 4
+Recursively adds a directory to the image by walking the given path and calling
+\fBadd_file\fR,
+\fBadd_dir\fR, and
+\fBadd_symlink\fR
+accordingly\&. This function will not follow symlinks, nor will it add the targets of symlinks\&.
+.RE
+.PP
+\fBadd_symlink\fR \fIpath\fR [ \fIlink\-target\fR ]
+.RS 4
+Adds a symlink to the image at the specified
+path, optionally pointing to the specified
+link\-target\&. If the
+link\-target
+is not provided, it is assumed that this symlink exists in the real filesystem, and the target will be read using readlink\&. There is no checking done to ensure that the target of the symlink exists, and symlinks will not be followed recursively\&.
+.RE
+.PP
+\fBadd_all_modules\fR [ \fI\-f filter\fR ] \fBpattern\fR
+.RS 4
+Adds modules to the image, without regard for the autodetect whitelist\&.
+\fBpattern\fR
+should be a subdirectory within the kernel tree describing a subset of modules to be included\&. Further refinement can be provided via the \-f flag with an extended regular expression\&.
+.RE
+.PP
+\fBadd_checked_modules\fR [ \fI\-f filter\fR ] \fBpattern\fR
+.RS 4
+Similar to
+\fBadd_all_modules\fR
+with the constraint that only modules matching the whitelist generated by the autodetect hook will be added to the image\&. If the autodetect hook is not present in the image, this function is identical to
+\fBadd_all_modules\fR\&.
+.RE
+.PP
+\fBadd_runscript\fR
+.RS 4
+Adds a runtime hook to the image, which is a busybox ash compatible shell script\&. The name of the script is guaranteed to match the name of the hook the script is called from\&.
+.RE
+.SH "ABOUT RUNTIME HOOKS"
+.sp
+Runtime hooks added to the image via the \fBadd_runscript\fR function from an install hook are able to provide extra functionality during early userspace\&. Specific functions in these files will run at different times\&. A hook can define one or more of these\&. At each hook point, hooks are run in the order that they are defined in the HOOKS variable, except for cleanup hooks which are run in reverse\&.
+.PP
+\fBrun_earlyhook\fR
+.RS 4
+Functions of this name will be run once the API mounts have been setup and the kernel command line has been parsed\&. Daemons needed for early userspace should be started from this hook point\&.
+.RE
+.PP
+\fBrun_hook\fR
+.RS 4
+Functions of this name will be run after any early hooks, and after user defined modules have been installed\&. This is the most common hook point, and functionality such as scanning for LVM volumes and mapping encrypted volumes should be performed here\&.
+.RE
+.PP
+\fBrun_latehook\fR
+.RS 4
+Functions of this name will be run after root has been mounted\&. This is generally used for further necessary setup in the real root, such as mounting other system partitions\&.
+.RE
+.PP
+\fBrun_cleanuphook\fR
+.RS 4
+Functions of this name are run as late as possible\&. Any daemons started from a run_earlyhook function should be shut down here in preparation for switching to the real root\&.
+.RE
+.SH "EARLY INIT ENVIRONMENT"
+.sp
+mkinitcpio gives special treatment to certain environment variables passed on the kernel command line:
+.PP
+\fBbreak\fR[\fI=<premount|postmount>\fR]
+.RS 4
+If specified, mkinitcpio will start a shell during early init\&. The optional parameter controls when this occurs: when
+\fIpremount\fR
+or no parameter are specified, the shell will be launched prior to mounting root\&. If
+\fIpostmount\fR
+is specified, the shell will be launched after mounting root\&.
+.RE
+.PP
+\fBdisablehooks=\fR\fIhooklist\fR
+.RS 4
+This is a comma separated list of hooks which will be skipped during early init\&.
+.RE
+.PP
+\fBearlymodules=\fR\fImodulelist\fR
+.RS 4
+This is a comma separated list of modules which will be loaded prior to any others\&. This is generally not needed, and usually points to a configuration or kernel problem\&.
+.RE
+.PP
+\fBquiet\fR
+.RS 4
+Causes mkinitcpio to output fewer messages during boot\&. Errors will not be suppressed\&.
+.RE
+.PP
+\fBro\fR
+.RS 4
+Specifies that root should be mounted with readonly permissions\&. This is the default behavior\&.
+.RE
+.PP
+\fBrw\fR
+.RS 4
+Specifies that root should be mounted with readwrite permissions\&. This is generally only useful if your initramfs uses the
+\fIfsck\fR
+hook\&.
+.RE
+.PP
+\fBroot=\fR\fIrootdevice\fR
+.RS 4
+This variable describes the root partition which early init will mount before passing control to the real init\&. mkinitcpio understands a variety of formats, the most basic of which is the path to the block device, either directly such as
+\fI/dev/sda2\fR, or using a udev symlink such as
+\fI/dev/disk/by\-label/CorsairF80\-root\fR\&. Support for identification by LABEL or UUID tags are also supported, such as,
+\fILABEL=CorsairF80\-root\fR\&. As of util\-linux 2\&.22, PARTUUID is also supported\&. Identification via hex encoded major/minor device ID is supported for legacy reasons, but should not be used\&.
+.RE
+.PP
+\fBrootdelay=\fR\fIseconds\fR
+.RS 4
+Sets the delay, in seconds, that mkinitcpio is willing to wait for the root device to show up, if it is not available immediately\&. This defaults to 5 seconds\&. If an invalid integer is passed, this variable will have no effect\&.
+.RE
+.sp
+These are only the variables that the core of mkinitcpio honor\&. Additional hooks may look for other environment variables and should be documented by the help output for the hook\&.
+.SH "FILES"
+.PP
+\fI/etc/mkinitcpio\&.conf\fR
+.RS 4
+Default configuration file for mkinitcpio\&.
+.RE
+.PP
+\fI/etc/mkinitcpio\&.d\fR
+.RS 4
+Folder containing mkinitcpio presets\&.
+.RE
+.PP
+\fI/usr/lib/initcpio/install\fR, \fI/lib/initcpio/install\fR
+.RS 4
+Search path for build time hooks\&.
+.RE
+.PP
+\fI/usr/lib/initcpio/hooks\fR, \fI/lib/initcpio/hooks\fR
+.RS 4
+Search path for early userspace runtime hooks\&.
+.RE
+.SH "EXAMPLES"
+.PP
+\fBmkinitcpio\fR
+.RS 4
+Perform a
+\fIdry\-run\fR\&. This will generate an initial ramdisk but will not write anything\&. Use \-g to create the real image\&.
+.RE
+.PP
+\fBmkinitcpio \-p linux\fR
+.RS 4
+Create an initial ramdisk based on the
+\fIlinux\fR
+preset\&.
+.RE
+.PP
+\fBmkinitcpio \-g /boot/initramfs\-linux\&.img \-k /boot/vmlinuz\-linux\fR
+.RS 4
+Create an initial ramdisk for the kernel at /boot/vmlinuz\-linux\&. The resulting image will be written to /boot/initramfs\-linux\&.img\&.
+.RE
+.SH "SEE ALSO"
+.sp
+A more thorough article on configuring mkinitcpio: http://wiki\&.archlinux\&.org/index\&.php/Mkinitcpio
+.sp
+\fBinitrd\fR(4), \fBlsinitcpio\fR(1), \fBmkinitcpio\&.conf\fR(5)
+.SH "BUGS"
+.sp
+Upon writing this manpage, there were no noticeable bugs present\&. Please visit http://bugs\&.archlinux\&.org/ for an up to date list\&.
+.SH "AUTHORS"
+.sp
+mkinitcpio is created and maintained by the Arch Linux Developer community\&.
+.SH "COPYRIGHT"
+.sp
+Copyright (c) Arch Linux 2006\-2012
