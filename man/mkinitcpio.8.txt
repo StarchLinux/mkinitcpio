@@ -158,7 +158,7 @@ functions exist to facilitate this.
 
 *add_runscript*::
 
-	Adds a runtime hook to the image, which is a busybox ash compatible shell
+	Adds a runtime hook to the image, which is a Bourne shell
 	script. The name of the script is guaranteed to match the name of the hook the
 	script is called from.
 
